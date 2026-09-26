@@ -1,0 +1,21 @@
+# Dependencias y archivos generados
+node_modules/
+dist/
+coverage/
+
+# Configuración local y secretos
+.env
+.env.*
+!.env.example
+
+# Editor y sistema operativo
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Temporales y registros
+*.log
+*.tmp
+*.swp
