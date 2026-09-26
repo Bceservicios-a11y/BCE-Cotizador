@@ -1,34 +1,512 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Cotizador de BCE Servicios Digitales.">
-    <title>Cotizador | BCE Servicios Digitales</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <script src="js/main.js" defer></script>
-  </head>
-  <body>
-    <a class="skip-link" href="#contenido">Ir al contenido</a>
-    <header class="site-header">
-      <div class="container">
-        <p class="brand">BCE <span>Servicios Digitales</span></p>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BCE | Demo Logística & Agencia de Carga</title>
+<style>
+:root{
+  --navy:#081d36;
+  --navy-2:#0f2d52;
+  --blue:#1d72d8;
+  --blue-2:#56a6ef;
+  --wine:#a20e46;
+  --wine-2:#cf275f;
+  --green:#0f9b64;
+  --yellow:#f5b21b;
+  --red:#d9304f;
+  --purple:#6f42c1;
+  --ink:#14213d;
+  --muted:#6f7f95;
+  --line:#dfe8f2;
+  --bg:#f4f8fc;
+  --card:#ffffff;
+  --shadow:0 10px 28px rgba(15,45,82,.08);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:Inter,Segoe UI,Roboto,Arial,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+.sidebar{background:linear-gradient(180deg,var(--navy),#0b2747);color:#fff;padding:18px 14px;position:sticky;top:0;height:100vh;overflow:auto}
+.brand{display:flex;align-items:center;gap:11px;padding:6px 8px 22px}
+.brand-mark{width:42px;height:42px;border:2px solid #fff;border-radius:10px;display:grid;place-items:center;font-weight:900;box-shadow:inset 0 0 0 3px rgba(255,255,255,.08)}
+.brand-text strong{display:block;font-size:20px;letter-spacing:.2px}
+.brand-text span{font-size:11px;color:#b9c8d8}
+.nav{display:grid;gap:6px}
+.nav button{border:0;background:transparent;color:#dce7f3;padding:12px 13px;border-radius:10px;text-align:left;display:flex;gap:10px;align-items:center;transition:.2s}
+.nav button:hover,.nav button.active{background:linear-gradient(90deg,var(--wine),#b91752);color:white;transform:translateX(2px)}
+.nav .ico{width:24px;text-align:center}
+.sidebar .support{margin-top:22px;border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:14px;background:rgba(255,255,255,.05)}
+.sidebar .support b{display:block;margin-bottom:4px}
+.sidebar .support small{color:#b8c7d8}
+.sidebar .support button{width:100%;margin-top:10px;border:1px solid #6b8aab;background:transparent;color:#fff;padding:9px;border-radius:9px}
+.main{min-width:0}
+.topbar{height:74px;background:#fff;display:flex;align-items:center;gap:14px;padding:0 22px;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.menuBtn{display:none;border:0;background:#eef4fa;border-radius:10px;padding:9px 11px;color:var(--navy)}
+.search{flex:1;max-width:520px;position:relative}
+.search input{width:100%;border:1px solid #cfd9e5;border-radius:12px;padding:11px 42px 11px 14px;background:#f8fbfe;outline:none}
+.search:after{content:"⌕";position:absolute;right:14px;top:8px;font-size:22px;color:#6c7d91}
+.top-actions{margin-left:auto;display:flex;align-items:center;gap:10px}
+.top-actions .btn{border:1px solid #d6e2ee;background:#fff;color:var(--navy);padding:9px 12px;border-radius:10px}
+.profile{display:flex;align-items:center;gap:9px;padding-left:10px;border-left:1px solid var(--line)}
+.avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#c9d9ea,#fff);display:grid;place-items:center;font-weight:800;color:var(--navy)}
+.profile small{display:block;color:var(--muted)}
+.content{padding:22px}
+.header{display:flex;gap:16px;justify-content:space-between;align-items:flex-start;margin-bottom:18px}
+.header h1{margin:3px 0 4px;font-size:30px}
+.header p{margin:0;color:var(--muted)}
+.header-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.select,.primary,.ghost{border-radius:10px;padding:10px 12px;border:1px solid #cfd9e5;background:#fff;color:var(--navy)}
+.primary{background:var(--navy);color:#fff;border-color:var(--navy)}
+.ghost:hover,.select:hover{background:#f4f8fc}
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(150px,1fr));gap:12px;margin-bottom:14px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--shadow);min-width:0}
+.kpi-head{display:flex;gap:9px;align-items:center;color:#3c4e66;font-size:13px}
+.kpi-icon{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800}
+.kpi-value{font-size:24px;font-weight:800;margin:8px 0 4px;white-space:nowrap}
+.delta{font-size:12px;color:var(--green);font-weight:700}.delta.bad{color:var(--red)}
+.grid-3{display:grid;grid-template-columns:1.2fr 1fr .8fr;gap:14px;margin-bottom:14px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:14px;min-width:0}
+.card-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.card-title h3{margin:0;font-size:16px}
+.card-title small{color:var(--muted)}
+.bar-chart{height:210px;display:flex;align-items:flex-end;gap:7px;padding:14px 6px 26px;border-left:1px solid #e8eff6;border-bottom:1px solid #e8eff6;position:relative}
+.bar-chart .bar{flex:1;min-width:4px;background:linear-gradient(180deg,#265f9f,#0b3563);border-radius:4px 4px 0 0;position:relative;transition:.25s}
+.bar-chart .bar:hover{filter:brightness(1.15);transform:translateY(-2px)}
+.bar-chart .bar:after{content:attr(data-label);position:absolute;left:50%;transform:translateX(-50%);bottom:-22px;font-size:10px;color:#7c8a9d;white-space:nowrap}
+.legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin-top:9px}
+.legend span:before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--c);margin-right:5px}
+.donut-wrap{display:flex;gap:16px;align-items:center;justify-content:center;padding:10px}
+.donut{width:155px;height:155px;border-radius:50%;display:grid;place-items:center;position:relative;flex:0 0 auto}
+.donut:after{content:"";width:92px;height:92px;border-radius:50%;background:#fff;position:absolute}
+.donut-center{z-index:1;text-align:center}.donut-center b{display:block;font-size:23px}.donut-center small{color:var(--muted)}
+.list-bars{display:grid;gap:11px}
+.list-row{display:grid;grid-template-columns:140px 1fr 60px;gap:10px;align-items:center;font-size:12px}
+.progress{height:10px;background:#edf2f7;border-radius:8px;overflow:hidden}.progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--blue-2));border-radius:8px}
+.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{padding:10px 9px;border-bottom:1px solid #edf1f5;text-align:left;white-space:nowrap}
+th{background:#f4f7fb;color:#43526a;font-size:11px;position:sticky;top:0}
+.badge{display:inline-block;padding:4px 9px;border-radius:8px;font-weight:700;font-size:11px}
+.badge.green{background:#d9f6e8;color:#0b7a4d}.badge.blue{background:#dceeff;color:#175f9b}.badge.yellow{background:#fff0bf;color:#876100}.badge.red{background:#ffdce2;color:#a51934}.badge.gray{background:#edf1f5;color:#607087}
+.map{height:240px;background:linear-gradient(180deg,#edf6ff,#e6f2fb);border-radius:12px;position:relative;overflow:hidden}
+.map svg{width:100%;height:100%}
+.pin{position:absolute;width:16px;height:16px;border:3px solid white;border-radius:50%;background:var(--blue);box-shadow:0 0 0 2px rgba(29,114,216,.35);cursor:pointer}
+.pin:hover{transform:scale(1.25)}
+.route-tip{position:absolute;background:#0a213c;color:#fff;padding:6px 8px;border-radius:7px;font-size:11px;display:none;z-index:5;pointer-events:none}
+.timeline{display:grid;gap:10px}
+.timeline-item{display:grid;grid-template-columns:82px 20px 1fr;gap:8px;align-items:start}
+.timeline-item .dot{width:14px;height:14px;border-radius:50%;background:var(--blue);margin-top:3px;box-shadow:0 0 0 3px #d9eaff}
+.timeline-item time{font-size:11px;color:var(--muted)}.timeline-item b{font-size:12px}.timeline-item small{display:block;color:var(--muted);margin-top:2px}
+.view{display:none}.view.active{display:block}
+.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.toolbar input,.toolbar select{border:1px solid #d1dce8;border-radius:9px;padding:8px 10px;background:#fff}
+.modal-backdrop{display:none;position:fixed;inset:0;background:rgba(6,20,38,.55);z-index:80;align-items:center;justify-content:center;padding:16px}
+.modal-backdrop.open{display:flex}
+.modal{width:min(560px,100%);max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow-y:auto;background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.25);padding:18px}
+.modal h3{margin:0 0 14px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-grid label{font-size:12px;color:#4f6077}.form-grid input,.form-grid select{width:100%;margin-top:5px;padding:10px;border:1px solid #d7e0e9;border-radius:9px}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:16px}
+.toast{position:fixed;right:18px;bottom:18px;background:#0b2747;color:#fff;padding:12px 14px;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.2);opacity:0;transform:translateY(10px);transition:.25s;z-index:100}
+.toast{pointer-events:none}
+.toast.show{opacity:1;transform:none}
+.small-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.mini{border:1px solid var(--line);border-radius:11px;padding:10px;background:#fff}
+.mini b{display:block;font-size:18px;margin:4px 0}
+.mini small{color:var(--muted)}
+.footer-note{color:#8290a3;font-size:11px;margin-top:12px;text-align:right}
+@media(max-width:1200px){.kpis{grid-template-columns:repeat(3,1fr)}.grid-3{grid-template-columns:1fr 1fr}.grid-3>.card:last-child{grid-column:1/-1}.small-cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){
+  .app{grid-template-columns:1fr}.sidebar{position:fixed;left:-270px;z-index:70;width:250px;transition:.25s}.sidebar.open{left:0}
+  .menuBtn{display:inline-block}.content{padding:16px}.topbar{padding:0 14px}
+  .profile div:not(.avatar){display:none}.grid-3,.grid-2{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}
+  .header{flex-direction:column}.header-actions{justify-content:flex-start}.search{max-width:none}
+}
+@media(max-width:560px){.kpis{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.list-row{grid-template-columns:110px 1fr 45px}.small-cards{grid-template-columns:1fr}}
+@media(max-width:560px){
+  .topbar{height:auto;min-height:74px;flex-wrap:wrap;padding-top:10px;padding-bottom:10px}
+  .search{order:3;flex:1 0 100%;min-width:0}
+  .card-title{flex-wrap:wrap}.card-title input{max-width:100%;min-width:0}
+  .donut-wrap{flex-wrap:wrap}
+  input,select{font-size:16px}
+  .toast{max-width:calc(100% - 36px)}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">BCE</div>
+      <div class="brand-text"><strong>BCE Demo</strong><span>Logística & Operaciones</span></div>
+    </div>
+    <div class="nav">
+      <button class="active" data-view="resumen"><span class="ico">▦</span>Resumen general</button>
+      <button data-view="carga"><span class="ico">▣</span>Agencia de carga</button>
+      <button data-view="inventario"><span class="ico">▤</span>Inventario</button>
+      <button data-view="seguimiento"><span class="ico">⌖</span>Seguimiento</button>
+      <button data-view="facturacion"><span class="ico">◉</span>Clientes & Facturación</button>
+      <button data-view="operacion"><span class="ico">↻</span>Operación diaria</button>
+    </div>
+    <div class="support">
+      <b>Demo interactiva</b>
+      <small>Todos los módulos funcionan con datos simulados. Ideal para presentar al cliente.</small>
+      <button id="resetBtn">Restablecer demo</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <button class="menuBtn" id="menuBtn">☰</button>
+      <div class="search"><input id="globalSearch" placeholder="Buscar cliente, guía, BL, producto, pedido..." /></div>
+      <div class="top-actions">
+        <button class="btn" id="exportBtn">Exportar CSV</button>
+        <div class="profile">
+          <div class="avatar">CC</div>
+          <div><b>Carlos Cachique</b><small>Administrador demo</small></div>
+        </div>
       </div>
-    </header>
-    <main id="contenido" class="container">
-      <section class="intro" aria-labelledby="titulo">
-        <p class="eyebrow">Cotizador</p>
-        <h1 id="titulo">Cotizador BCE Servicios Digitales</h1>
-        <p>Próximamente podrás seleccionar servicios y preparar tu cotización.</p>
+    </div>
+
+    <div class="content">
+      <section class="view active" id="view-resumen">
+        <div class="header">
+          <div><small style="color:var(--muted)">Vista ejecutiva</small><h1>Dashboard General de Logística</h1><p>Operaciones, envíos, facturación, inventario y desempeño en una sola vista.</p></div>
+          <div class="header-actions">
+            <select class="select periodSelect"><option value="30">Últimos 30 días</option><option value="7">Últimos 7 días</option><option value="90">Últimos 90 días</option></select>
+            <button class="primary" data-modal="shipment">+ Nuevo embarque</button>
+          </div>
+        </div>
+        <div class="kpis" id="kpis-resumen"></div>
+        <div class="grid-3">
+          <div class="card"><div class="card-title"><h3>Pedidos por día</h3><small>Últimos 12 cortes</small></div><div class="bar-chart" id="chart-resumen"></div></div>
+          <div class="card"><div class="card-title"><h3>Estado de envíos</h3><small>Distribución actual</small></div><div class="donut-wrap"><div class="donut" id="donut-resumen"><div class="donut-center"><b>2,458</b><small>envíos</small></div></div><div id="legend-resumen"></div></div></div>
+          <div class="card"><div class="card-title"><h3>Facturación por servicio</h3><small>Este mes</small></div><div class="list-bars" id="bars-resumen"></div></div>
+        </div>
+        <div class="grid-2">
+          <div class="card"><div class="card-title"><h3>Top clientes</h3><small>Por facturación</small></div><div class="table-wrap"><table id="table-resumen"></table></div></div>
+          <div class="card"><div class="card-title"><h3>Alertas operativas</h3><button class="ghost" id="resolveAlerts">Marcar revisadas</button></div><div id="alerts"></div></div>
+        </div>
       </section>
-      <section class="panel" aria-labelledby="estado-titulo">
-        <span class="badge">En preparación</span>
-        <h2 id="estado-titulo">Estamos construyendo tu cotizador</h2>
-        <p>Esta es la base inicial. El catálogo de servicios, los precios y las reglas de cálculo se incorporarán en la siguiente etapa.</p>
+
+      <section class="view" id="view-carga">
+        <div class="header">
+          <div><small style="color:var(--muted)">Freight forwarding</small><h1>Dashboard de Agencia de Carga</h1><p>Embarques, documentación, navieras, aduanas y costos logísticos.</p></div>
+          <div class="header-actions"><button class="primary" data-modal="shipment">+ Registrar embarque</button></div>
+        </div>
+        <div class="kpis" id="kpis-carga"></div>
+        <div class="grid-3">
+          <div class="card"><div class="card-title"><h3>Estado de embarques</h3><small>30 días</small></div><div class="bar-chart" id="chart-carga"></div></div>
+          <div class="card"><div class="card-title"><h3>Rutas internacionales</h3><small>Movimientos simulados</small></div><div class="map" id="map-carga">
+            <svg viewBox="0 0 600 260" preserveAspectRatio="none">
+              <defs><linearGradient id="sea" x1="0" x2="1"><stop stop-color="#eaf4fc"/><stop offset="1" stop-color="#dcecf9"/></linearGradient></defs>
+              <rect width="600" height="260" fill="url(#sea)"/>
+              <path d="M30 90 C120 20,210 55,280 85 S430 80,560 55" fill="none" stroke="#5a92cf" stroke-width="3" stroke-dasharray="8 7"/>
+              <path d="M65 190 C150 160,220 180,320 145 S470 120,560 205" fill="none" stroke="#0f9b64" stroke-width="3" stroke-dasharray="8 7"/>
+              <path d="M85 35 C150 75,240 85,330 60 S455 45,525 95" fill="none" stroke="#a20e46" stroke-width="3" stroke-dasharray="8 7"/>
+            </svg>
+            <div class="pin" style="left:9%;top:68%" data-tip="Callao, Perú"></div>
+            <div class="pin" style="left:42%;top:47%;background:#0f9b64" data-tip="Panamá"></div>
+            <div class="pin" style="left:75%;top:23%;background:#a20e46" data-tip="Róterdam"></div>
+            <div class="pin" style="left:87%;top:70%;background:#f5b21b" data-tip="Shanghai"></div>
+            <div class="route-tip" id="routeTip"></div>
+          </div></div>
+          <div class="card"><div class="card-title"><h3>Reservas por naviera</h3><small>Este mes</small></div><div class="list-bars" id="bars-carga"></div></div>
+        </div>
+        <div class="grid-2">
+          <div class="card"><div class="card-title"><h3>Documentos pendientes</h3><button class="ghost" id="docReviewBtn">Revisar urgentes</button></div><div class="table-wrap"><table id="table-docs"></table></div></div>
+          <div class="card"><div class="card-title"><h3>Aduanas</h3><small>Tiempos promedio</small></div><div class="table-wrap"><table id="table-aduanas"></table></div></div>
+        </div>
+        <div class="card"><div class="card-title"><h3>Operaciones recientes</h3><small>BL / Referencia</small></div><div class="table-wrap"><table id="table-carga"></table></div></div>
       </section>
-    </main>
-    <footer class="site-footer container">
-      <small>© <span id="current-year">2026</span> BCE Servicios Digitales</small>
-    </footer>
-  </body>
+
+      <section class="view" id="view-inventario">
+        <div class="header">
+          <div><small style="color:var(--muted)">Almacenes & stock</small><h1>Control de Inventario</h1><p>Existencias, entradas, salidas, rotación y stock crítico.</p></div>
+          <div class="header-actions"><button class="primary" data-modal="movement">+ Nuevo movimiento</button></div>
+        </div>
+        <div class="kpis" id="kpis-inventario"></div>
+        <div class="grid-3">
+          <div class="card"><div class="card-title"><h3>Entradas vs salidas</h3><small>Últimos días</small></div><div class="bar-chart" id="chart-inventario"></div></div>
+          <div class="card"><div class="card-title"><h3>Existencias por almacén</h3><small>Unidades</small></div><div class="donut-wrap"><div class="donut" id="donut-inv"><div class="donut-center"><b>24,580</b><small>unidades</small></div></div><div id="legend-inv"></div></div></div>
+          <div class="card"><div class="card-title"><h3>Stock crítico</h3><button class="ghost" id="reorderBtn">Generar reposición</button></div><div class="table-wrap"><table id="table-stock"></table></div></div>
+        </div>
+        <div class="grid-2">
+          <div class="card"><div class="card-title"><h3>Rotación por categoría</h3><small>Índice</small></div><div class="list-bars" id="bars-inv"></div></div>
+          <div class="card"><div class="card-title"><h3>Productos en inventario</h3><input id="invSearch" placeholder="Buscar producto..." style="padding:8px;border:1px solid #d6e0ea;border-radius:8px"></div><div class="table-wrap"><table id="table-inv"></table></div></div>
+        </div>
+        <div class="card"><div class="card-title"><h3>Kardex reciente</h3><small>Movimientos</small></div><div class="table-wrap"><table id="table-kardex"></table></div></div>
+      </section>
+
+      <section class="view" id="view-seguimiento">
+        <div class="header"><div><small style="color:var(--muted)">Tracking</small><h1>Seguimiento de Envíos</h1><p>Ubicaciones, ETA, estados, alertas y desempeño por operador.</p></div></div>
+        <div class="kpis" id="kpis-seguimiento"></div>
+        <div class="grid-3">
+          <div class="card"><div class="card-title"><h3>Mapa de rutas</h3><select id="routeFilter" class="select"><option value="all">Todos</option><option value="transito">En tránsito</option><option value="retrasado">Retrasados</option></select></div><div class="map" id="map-track">
+            <svg viewBox="0 0 600 260" preserveAspectRatio="none"><rect width="600" height="260" fill="#eaf4fc"/><path d="M60 200 C160 150,210 175,290 135 S420 80,540 70" fill="none" stroke="#1d72d8" stroke-width="4" stroke-dasharray="10 8"/><path d="M90 55 C180 70,235 115,310 140 S430 180,520 205" fill="none" stroke="#0f9b64" stroke-width="4" stroke-dasharray="10 8"/></svg>
+            <div class="pin track-pin" data-status="transito" style="left:10%;top:72%" data-tip="Lima - Salida"></div>
+            <div class="pin track-pin" data-status="transito" style="left:47%;top:49%;background:#0f9b64" data-tip="Panamá - En tránsito"></div>
+            <div class="pin track-pin" data-status="retrasado" style="left:77%;top:29%;background:#d9304f" data-tip="Madrid - Retraso"></div>
+            <div class="route-tip" id="routeTip2"></div>
+          </div></div>
+          <div class="card"><div class="card-title"><h3>Timeline de estados</h3><small>Guía #BC-45872</small></div><div class="timeline" id="timeline"></div></div>
+          <div class="card"><div class="card-title"><h3>Entregas por región</h3><small>Este mes</small></div><div class="list-bars" id="bars-region"></div></div>
+        </div>
+        <div class="grid-2">
+          <div class="card"><div class="card-title"><h3>Alertas de retraso</h3><small>Prioridad</small></div><div class="table-wrap"><table id="table-delay"></table></div></div>
+          <div class="card"><div class="card-title"><h3>Estado por operador</h3><small>OTIF</small></div><div class="table-wrap"><table id="table-operator"></table></div></div>
+        </div>
+      </section>
+
+      <section class="view" id="view-facturacion">
+        <div class="header"><div><small style="color:var(--muted)">Comercial</small><h1>Clientes y Facturación</h1><p>Facturación, cobranza, ticket promedio, margen y cartera.</p></div><div class="header-actions"><button class="primary" id="newInvoiceBtn">+ Registrar factura</button></div></div>
+        <div class="kpis" id="kpis-facturacion"></div>
+        <div class="grid-3">
+          <div class="card"><div class="card-title"><h3>Evolución de ingresos</h3><small>30 días</small></div><div class="bar-chart" id="chart-facturacion"></div></div>
+          <div class="card"><div class="card-title"><h3>Facturación por cliente</h3><small>Participación</small></div><div class="donut-wrap"><div class="donut" id="donut-bill"><div class="donut-center"><b>S/ 1.23M</b><small>facturado</small></div></div><div id="legend-bill"></div></div></div>
+          <div class="card"><div class="card-title"><h3>Servicios más vendidos</h3><small>Este mes</small></div><div class="list-bars" id="bars-bill"></div></div>
+        </div>
+        <div class="grid-2">
+          <div class="card"><div class="card-title"><h3>Top empresas</h3><small>Facturación</small></div><div class="table-wrap"><table id="table-clients"></table></div></div>
+          <div class="card"><div class="card-title"><h3>Cobranza por vencer</h3><button class="ghost" id="collectBtn">Enviar recordatorios</button></div><div class="table-wrap"><table id="table-collection"></table></div></div>
+        </div>
+        <div class="card"><div class="card-title"><h3>Facturas recientes</h3><small>Estado</small></div><div class="table-wrap"><table id="table-invoices"></table></div></div>
+      </section>
+
+      <section class="view" id="view-operacion">
+        <div class="header"><div><small style="color:var(--muted)">Centro de control</small><h1>Operación Diaria y Rutas</h1><p>Pedidos, picking, despacho, flota y alertas operativas.</p></div><div class="header-actions"><button class="primary" id="dispatchBtn">Optimizar despachos</button></div></div>
+        <div class="kpis" id="kpis-operacion"></div>
+        <div class="grid-3">
+          <div class="card"><div class="card-title"><h3>Pedidos por hora</h3><small>Hoy</small></div><div class="bar-chart" id="chart-operacion"></div></div>
+          <div class="card"><div class="card-title"><h3>Rendimiento por almacén</h3><small>Este mes</small></div><div class="list-bars" id="bars-warehouse"></div></div>
+          <div class="card"><div class="card-title"><h3>Rutas del día</h3><small>Estado</small></div><div class="donut-wrap"><div class="donut" id="donut-routes"><div class="donut-center"><b>42</b><small>rutas</small></div></div><div id="legend-routes"></div></div></div>
+        </div>
+        <div class="grid-2">
+          <div class="card"><div class="card-title"><h3>Resumen por zona</h3><small>Participación</small></div><div class="small-cards" id="zones"></div></div>
+          <div class="card"><div class="card-title"><h3>Alertas operativas</h3><button class="ghost" id="ackOps">Confirmar lectura</button></div><div id="opsAlerts"></div></div>
+        </div>
+        <div class="card"><div class="card-title"><h3>Operaciones recientes</h3><small>Tiempo real</small></div><div class="table-wrap"><table id="table-ops"></table></div></div>
+      </section>
+
+      <div class="footer-note">Demo funcional con datos simulados · BCE Servicios Digitales</div>
+    </div>
+  </main>
+</div>
+
+<div class="modal-backdrop" id="shipmentModal">
+  <div class="modal">
+    <h3>Registrar nuevo embarque</h3>
+    <div class="form-grid">
+      <label>BL / Referencia<input id="shipRef" value="BCE-NEW-001"></label>
+      <label>Cliente<input id="shipClient" value="Cliente Demo"></label>
+      <label>Origen<input id="shipOrigin" value="Callao, Perú"></label>
+      <label>Destino<input id="shipDest" value="Miami, EE.UU."></label>
+      <label>ETA<input id="shipEta" type="date"></label>
+      <label>Estado<select id="shipStatus"><option>En tránsito</option><option>En aduana</option><option>Documentos</option><option>Entregado</option></select></label>
+    </div>
+    <div class="modal-actions"><button class="ghost closeModal">Cancelar</button><button class="primary" id="saveShipment">Guardar embarque</button></div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="movementModal">
+  <div class="modal">
+    <h3>Nuevo movimiento de inventario</h3>
+    <div class="form-grid">
+      <label>Producto<input id="movProduct" value="Detergente Líquido 1 L"></label>
+      <label>Tipo<select id="movType"><option>Entrada</option><option>Salida</option></select></label>
+      <label>Cantidad<input id="movQty" type="number" value="50"></label>
+      <label>Almacén<select id="movWarehouse"><option>Lima Principal</option><option>Callao</option><option>Ate</option></select></label>
+    </div>
+    <div class="modal-actions"><button class="ghost closeModal">Cancelar</button><button class="primary" id="saveMovement">Registrar movimiento</button></div>
+  </div>
+</div>
+<div class="toast" id="toast">Acción realizada</div>
+
+<script>
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const state = {
+  shipments:[
+    ["MEDU9876543","Industrias del Norte","Shanghai, China","Callao, Perú","05 oct 2026","En tránsito"],
+    ["MSCU7654321","Comercializadora AG","Los Ángeles, EE.UU.","Callao, Perú","03 oct 2026","En aduana"],
+    ["HLCU1234567","Alimentos del Centro","Santos, Brasil","Paita, Perú","08 oct 2026","En tránsito"],
+    ["ONEU9871234","Tiendas Sol","Busan, Corea","Callao, Perú","06 oct 2026","Documentos"],
+    ["CMAU4567890","Distribuidora Latina","Róterdam, Países Bajos","Callao, Perú","10 oct 2026","En tránsito"]
+  ],
+  inventory:[
+    ["INV-0001","Agua Purificada 500 ml",1245,500,"A-01-01","En stock"],
+    ["INV-0002","Detergente Líquido 1 L",98,50,"B-02-03","En stock"],
+    ["INV-0003","Papel Higiénico 20 pzs",5,50,"C-01-02","Stock bajo"],
+    ["INV-0004","Aceite Vegetal 1 L",640,200,"A-03-01","En stock"],
+    ["INV-0005","Leche Entera 1 L",22,60,"B-01-03","Stock bajo"],
+    ["INV-0006","Jabón de Manos 500 ml",310,100,"C-02-01","En stock"]
+  ],
+  kardex:[
+    ["25 sep 2026 14:32","Entrada","INV-0001","Agua Purificada 500 ml","Lima Principal","+500","1,245"],
+    ["25 sep 2026 13:17","Salida","INV-0004","Aceite Vegetal 1 L","Callao","-120","640"],
+    ["25 sep 2026 12:05","Entrada","INV-0002","Detergente Líquido 1 L","Ate","+300","98"]
+  ]
+};
+
+const colors=["#0f9b64","#1d72d8","#f5b21b","#d9304f","#6f42c1","#7f8c9f"];
+
+function toast(msg){const t=$("#toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)}
+function badge(v){
+  let c="gray"; const s=String(v).toLowerCase();
+  if(s.includes("entreg")||s.includes("normal")||s.includes("stock")||s.includes("pagada")||s.includes("complet")) c="green";
+  else if(s.includes("tránsito")||s.includes("carga")||s.includes("proceso")) c="blue";
+  else if(s.includes("aduana")||s.includes("pend")||s.includes("document")) c="yellow";
+  else if(s.includes("retras")||s.includes("bajo")||s.includes("riesgo")||s.includes("urgente")||s.includes("demora")) c="red";
+  return `<span class="badge ${c}">${v}</span>`
+}
+function kpis(id, items){
+  $(id).innerHTML=items.map((x,i)=>`<div class="kpi"><div class="kpi-head"><span class="kpi-icon" style="background:${x[3]||colors[i%colors.length]}">${x[0]}</span>${x[1]}</div><div class="kpi-value">${x[2]}</div><div class="delta ${x[4]?'bad':''}">${x[4]?'▲':'▲'} ${x[5]||((i+2)*2)+'%'} <span style="color:#8b98aa;font-weight:500">vs. periodo anterior</span></div></div>`).join("");
+}
+function bars(id, arr, max=null){
+  max=max||Math.max(...arr.map(x=>x[1]));
+  $(id).innerHTML=arr.map(x=>`<div class="list-row"><span>${x[0]}</span><div class="progress"><i style="width:${Math.max(5,x[1]/max*100)}%"></i></div><b>${x[2]??x[1]}</b></div>`).join("");
+}
+function chart(id, values, labels=[]){
+  const max=Math.max(...values);
+  $(id).innerHTML=values.map((v,i)=>`<div class="bar" style="height:${25+v/max*75}%" data-label="${labels[i]||i+1}" title="${v}"></div>`).join("");
+}
+function donut(id, vals){
+  let acc=0; const parts=vals.map((v,i)=>{const a=acc;acc+=v;return `${colors[i%colors.length]} ${a}% ${acc}%`}).join(",");
+  $(id).style.background=`conic-gradient(${parts})`;
+}
+function legend(id, items){
+  $(id).innerHTML=items.map((x,i)=>`<div style="font-size:12px;margin:7px 0"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${colors[i]};margin-right:7px"></span>${x[0]} <b style="float:right;margin-left:15px">${x[1]}</b></div>`).join("");
+}
+function table(id, headers, rows, custom={}){
+  $(id).innerHTML=`<thead><tr>${headers.map(h=>`<th>${h}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((c,i)=>`<td>${custom[i]?custom[i](c,r):c}</td>`).join("")}</tr>`).join("")}</tbody>`;
+}
+function renderAll(){
+  kpis("#kpis-resumen",[["▣","Envíos totales","2,458","#1d72d8"],["✓","Entregas a tiempo","92.4%","#0f9b64"],["▤","Órdenes del día","348","#a20e46"],["S/","Facturación mensual","S/ 1.23M","#1d72d8"],["◉","Ticket promedio","S/ 1,245","#0f2d52"],["!","Incidencias","28","#d9304f",true,"20%"]]);
+  chart("#chart-resumen",[18,25,34,29,45,53,48,62,71,68,89,96],["1","3","5","7","9","11","13","15","17","19","21","23"]);
+  donut("#donut-resumen",[74,20,4,2]); legend("#legend-resumen",[["Entregados","74%"],["En tránsito","20%"],["En preparación","4%"],["Incidencia","2%"]]);
+  bars("#bars-resumen",[["Transporte terrestre",485,"S/485K"],["Almacenaje",278,"S/278K"],["Última milla",186,"S/186K"],["Carga consolidada",98,"S/98K"],["Aduanas",77,"S/77K"]]);
+  table("#table-resumen",["Cliente","Envíos","Facturación","Variación"],[["Supermercados del Centro",520,"S/ 312,450","▲ 12%"],["Tiendas Sol",430,"S/ 278,900","▲ 8%"],["Distribuidora Latina",386,"S/ 210,320","▲ 15%"],["Comercializadora AG",310,"S/ 185,600","▼ 3%"]]);
+  $("#alerts").innerHTML=[["Retraso en ruta TR-045","Tráfico pesado en Panamericana Sur","18 min","red"],["Capacidad de muelle al 95%","Programar espacios adicionales","42 min","yellow"],["Pedido #PL-45902 con incidencia","Faltan 2 piezas en picking","1 h","red"],["Mantenimiento programado","Muelle 3 fuera de servicio","2 h","blue"]].map(a=>`<div style="display:grid;grid-template-columns:28px 1fr auto;gap:10px;padding:10px 0;border-bottom:1px solid #edf1f5"><span class="badge ${a[3]}" style="padding:4px 7px">!</span><div><b style="font-size:12px">${a[0]}</b><small style="display:block;color:#7a8898">${a[1]}</small></div><small>${a[2]}</small></div>`).join("");
+
+  kpis("#kpis-carga",[["▣","Cargas activas","342","#1d72d8"],["▤","Contenedores en tránsito","518","#0f9b64"],["◎","OTIF","92.4%","#6f42c1"],["▧","Booking confirmados","276","#1d72d8"],["S/","Costos logísticos","S/ 1.02M","#0f2d52"],["!","Incidencias aduaneras","26","#d9304f",true,"30%"]]);
+  chart("#chart-carga",[22,31,38,35,46,43,51,57,61,66,74,83],["1","3","5","7","9","11","13","15","17","19","21","23"]);
+  bars("#bars-carga",[["Maersk",86,"86"],["MSC",72,"72"],["CMA CGM",58,"58"],["Hapag-Lloyd",46,"46"],["ONE",38,"38"],["Evergreen",32,"32"],["COSCO",28,"28"]]);
+  table("#table-docs",["Documento","Cantidad","Estado"],[["BL originales",18,"Urgente"],["Certificado de origen",12,"En proceso"],["Factura comercial",8,"En proceso"],["Lista de empaque",6,"Pendiente"],["Documentos aduanales",10,"Urgente"]],{2:c=>badge(c)});
+  table("#table-aduanas",["Aduana","Embarques","Estado","Tiempo prom."],[["Callao",86,"Normal","1.2 días"],["Paita",62,"Congestión","3.5 días"],["Tacna",48,"Normal","1.8 días"],["Tumbes",36,"Normal","1.4 días"],["Desaguadero",28,"Demora","4.2 días"]],{2:c=>badge(c)});
+  renderShipmentTable();
+
+  kpis("#kpis-inventario",[["□","SKU activos","1,284","#1d72d8"],["◫","Stock total","24,580","#0f9b64"],["!","Productos con stock bajo","48","#d9304f",true,"23%"],["↻","Rotación promedio","3.2","#1d72d8"],["↓","Entradas del día","320","#6f42c1"],["↑","Salidas del día","278","#a20e46"]]);
+  chart("#chart-inventario",[35,44,29,51,46,68,52,74,61,49,83,70],["1","3","5","7","9","11","13","15","17","19","21","23"]);
+  donut("#donut-inv",[38,22,18,13,6,3]); legend("#legend-inv",[["Lima Principal","37.5%"],["Callao","22.3%"],["Ate","18.1%"],["Surco","12.6%"],["Norte","6.4%"],["Otros","3.1%"]]);
+  bars("#bars-inv",[["Alimentos y bebidas",48,"4.8"],["Limpieza",36,"3.6"],["Cuidado personal",29,"2.9"],["Electrónicos",24,"2.4"],["Hogar",21,"2.1"],["Papelería",18,"1.8"]],50);
+  table("#table-stock",["Producto","Stock actual","Mínimo"],state.inventory.filter(r=>r[2]<r[3]).map(r=>[r[1],r[2],r[3]]),{1:c=>`<b style="color:var(--red)">${c}</b>`});
+  renderInventory(); renderKardex();
+
+  kpis("#kpis-seguimiento",[["▣","Envíos en tránsito","482","#1d72d8"],["◷","ETA promedio","2.6 días","#0f9b64"],["✓","Entregas completadas","1,821","#0f9b64"],["◷","Retrasos","57","#f5b21b",true,"23%"],["◎","Cumplimiento OTIF","92.4%","#0f2d52"],["!","Incidencias","28","#d9304f",true,"20%"]]);
+  $("#timeline").innerHTML=[["25 sep 13:17","Entregado","Firmado por recepción"],["25 sep 08:42","En ruta de entrega","Lima, Perú"],["24 sep 21:15","En tránsito","Callao"],["24 sep 14:03","Salida de centro","Centro de distribución"],["24 sep 09:21","Procesado","Sistema BCE"]].map((x,i)=>`<div class="timeline-item"><time>${x[0]}</time><span class="dot" style="background:${i==0?'#0f9b64':'#1d72d8'}"></span><div><b>${x[1]}</b><small>${x[2]}</small></div></div>`).join("");
+  bars("#bars-region",[["Lima",620,"620"],["Callao",430,"430"],["Norte",378,"378"],["Sur",210,"210"],["Centro",186,"186"]]);
+  table("#table-delay",["Guía","Cliente","Destino","Retraso","Motivo"],[["PL-45890","Comercializadora AG","Arequipa","+2 días","Clima"],["PL-45876","Distribuidora Latina","Trujillo","+1 día","Alta demanda"],["PL-45869","Tiendas Sol","Cusco","+1 día","Revisión"],["PL-45854","Grupo El Trébol","Piura","+2 días","Falla en ruta"]],{3:c=>badge("Retrasado "+c)});
+  table("#table-operator",["Operador","Envíos","Entregados","OTIF"],[["Olva",520,486,"93.5%"],["Shalom",430,392,"91.2%"],["Marvisur",386,350,"90.7%"],["Urbano",310,292,"94.2%"]]);
+
+  kpis("#kpis-facturacion",[["S/","Facturación mensual","S/ 1.23M","#1d72d8"],["◉","Clientes activos","186","#0f9b64"],["◉","Ticket promedio","S/ 1,245","#a20e46"],["▧","Cobranza pendiente","S/ 320.6K","#d9304f",true,"18%"],["+","Nuevos clientes","24","#0f2d52"],["▥","Margen bruto","28.5%","#6f42c1"]]);
+  chart("#chart-facturacion",[28,32,30,44,42,58,52,64,69,73,88,95],["1","3","5","7","9","11","13","15","17","19","21","23"]);
+  donut("#donut-bill",[27,19,14,12,9,19]); legend("#legend-bill",[["Supermercados del Centro","26.5%"],["Tiendas Sol","18.7%"],["Comercializadora AG","14.3%"],["Distribuidora Latina","11.9%"],["Grupo El Trébol","8.6%"],["Otros","19.9%"]]);
+  bars("#bars-bill",[["Transporte terrestre",485,"S/485K"],["Almacenaje",278,"S/278K"],["Última milla",186,"S/186K"],["Refrigerado",145,"S/145K"],["Carga consolidada",98,"S/98K"],["Aduanas",77,"S/77K"]]);
+  table("#table-clients",["Cliente","Facturación","Envíos","Variación"],[["Supermercados del Centro","S/ 326,450",520,"▲ 12%"],["Tiendas Sol","S/ 230,780",430,"▲ 8%"],["Comercializadora AG","S/ 176,320",386,"▲ 15%"],["Distribuidora Latina","S/ 146,600",310,"▼ 3%"]]);
+  table("#table-collection",["Cliente","Pendiente","Días","Estado"],[["Comercializadora AG","S/ 78,450","5 días","Por vencer"],["Tiendas Sol","S/ 62,300","8 días","Por vencer"],["Restaurantes del Pacífico","S/ 54,890","12 días","En riesgo"],["Distribuidora Latina","S/ 48,600","15 días","En riesgo"]],{3:c=>badge(c)});
+  table("#table-invoices",["Factura","Cliente","Servicio","Fecha","Monto","Estado"],[["FAC-15872","Supermercados del Centro","Transporte","25 sep 2026","S/ 12,450","Pagada"],["FAC-15871","Tiendas Sol","Almacenaje","25 sep 2026","S/ 8,230","En proceso"],["FAC-15870","Comercializadora AG","Última milla","24 sep 2026","S/ 15,680","Pendiente"],["FAC-15869","Distribuidora Latina","Refrigerado","24 sep 2026","S/ 9,450","Pagada"]],{5:c=>badge(c)});
+
+  kpis("#kpis-operacion",[["◉","Pedidos del día","1,248","#1d72d8"],["▣","Despachos programados","965","#0f9b64"],["□","Picking completado","92.4%","#a20e46"],["⌂","Carga en muelle","28","#1d72d8"],["▣","Vehículos activos","42","#0f2d52"],["◎","Productividad","148","#d9304f"]]);
+  chart("#chart-operacion",[15,28,42,65,83,57,39,48,64,79,93,61],["6h","7h","8h","9h","10h","11h","12h","13h","14h","15h","16h","17h"]);
+  bars("#bars-warehouse",[["Lima Principal",96,"96.2%"],["Callao",93,"92.8%"],["Ate",89,"89.4%"],["Surco",87,"87.1%"],["Norte",85,"84.6%"]],100);
+  donut("#donut-routes",[62,19,12,7]); legend("#legend-routes",[["En tránsito","61.9%"],["En carga","19.0%"],["Pendientes","11.9%"],["Completadas","7.1%"]]);
+  $("#zones").innerHTML=[["Lima","28%"],["Callao","18%"],["Norte","17%"],["Sur","16%"],["Centro","12%"],["Oriente","9%"]].map(x=>`<div class="mini"><small>${x[0]}</small><b>${x[1]}</b><div class="progress"><i style="width:${parseInt(x[1])}%"></i></div></div>`).join("");
+  $("#opsAlerts").innerHTML=[["Retraso en ruta TR-045","Tráfico pesado","18 min"],["Capacidad de muelle 95%","Programar espacios","42 min"],["Pedido #PL-45902","Incidencia de picking","1 h"],["Mantenimiento programado","Muelle 3","2 h"]].map((a,i)=>`<div style="display:flex;gap:10px;align-items:center;border-bottom:1px solid #edf1f5;padding:10px 0"><span class="badge ${i<2?'red':'blue'}">!</span><div style="flex:1"><b style="font-size:12px">${a[0]}</b><small style="display:block;color:#7b8796">${a[1]}</small></div><small>${a[2]}</small></div>`).join("");
+  table("#table-ops",["Pedido","Almacén","Ruta","Transportista","Prioridad","Estado"],[["#PL-45902","Callao","R-103","Transportes Sol","Alta","En tránsito"],["#PL-45871","Lima","R-089","Flecha Amarilla","Media","En carga"],["#PL-45866","Ate","R-076","LogiTrans","Alta","Completado"],["#PL-45860","Surco","R-092","Envíos Rápidos","Media","En tránsito"]],{4:c=>badge(c=="Alta"?"Urgente":"Pendiente"),5:c=>badge(c)});
+}
+function renderShipmentTable(){
+  table("#table-carga",["BL / Referencia","Cliente","Origen","Destino","ETA","Estado"],state.shipments,{5:c=>badge(c)});
+}
+function renderInventory(filter=""){
+  const rows=state.inventory.filter(r=>r.join(" ").toLowerCase().includes(filter.toLowerCase()));
+  table("#table-inv",["Código","Producto","Stock actual","Mínimo","Ubicación","Estado"],rows,{5:c=>badge(c)});
+}
+function renderKardex(){
+  table("#table-kardex",["Fecha y hora","Movimiento","Código","Producto","Almacén","Cantidad","Saldo"],state.kardex,{1:c=>badge(c=="Entrada"?"Entregado":"Retrasado"),5:c=>`<b style="color:${String(c).startsWith('-')?'var(--red)':'var(--green)'}">${c}</b>`});
+}
+
+$$(".nav button").forEach(btn=>btn.addEventListener("click",()=>{
+  $$(".nav button").forEach(b=>b.classList.remove("active")); btn.classList.add("active");
+  $$(".view").forEach(v=>v.classList.remove("active")); $("#view-"+btn.dataset.view).classList.add("active");
+  $("#sidebar").classList.remove("open"); $("#globalSearch").value="";
+}));
+$("#menuBtn").onclick=()=>$("#sidebar").classList.toggle("open");
+
+function openModal(which){$("#"+which+"Modal").classList.add("open")}
+$$("[data-modal='shipment']").forEach(b=>b.onclick=()=>openModal("shipment"));
+$$("[data-modal='movement']").forEach(b=>b.onclick=()=>openModal("movement"));
+$$(".closeModal").forEach(b=>b.onclick=()=>b.closest(".modal-backdrop").classList.remove("open"));
+$$(".modal-backdrop").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)m.classList.remove("open")}));
+
+$("#saveShipment").onclick=()=>{
+  const r=[$("#shipRef").value,$("#shipClient").value,$("#shipOrigin").value,$("#shipDest").value,$("#shipEta").value||"Por definir",$("#shipStatus").value];
+  state.shipments.unshift(r);renderShipmentTable();$("#shipmentModal").classList.remove("open");toast("Embarque registrado en la demo");
+};
+$("#saveMovement").onclick=()=>{
+  const p=$("#movProduct").value, type=$("#movType").value, qty=Number($("#movQty").value||0), wh=$("#movWarehouse").value;
+  let item=state.inventory.find(r=>r[1].toLowerCase()===p.toLowerCase());
+  if(item){item[2]+= type==="Entrada"?qty:-qty; item[5]=item[2]<item[3]?"Stock bajo":"En stock"}
+  state.kardex.unshift([new Date().toLocaleString("es-PE"),type,item?item[0]:"INV-NUEVO",p,wh,(type==="Entrada"?"+":"-")+qty,item?item[2]:"-"]);
+  renderInventory($("#invSearch").value);renderKardex();$("#movementModal").classList.remove("open");toast("Movimiento actualizado correctamente");
+};
+
+$("#invSearch").addEventListener("input",e=>renderInventory(e.target.value));
+$("#globalSearch").addEventListener("input",e=>{
+  const q=e.target.value.toLowerCase().trim();
+  const active=$(".view.active");
+  active.querySelectorAll("tbody tr").forEach(tr=>{tr.style.display=!q||tr.innerText.toLowerCase().includes(q)?"":"none"});
+});
+$("#resetBtn").onclick=()=>{location.reload()};
+$("#resolveAlerts").onclick=()=>{$("#alerts").style.opacity=.45;toast("Alertas marcadas como revisadas")};
+$("#docReviewBtn").onclick=()=>toast("Se filtraron documentos urgentes para revisión");
+$("#reorderBtn").onclick=()=>toast("Solicitud de reposición generada en la demo");
+$("#collectBtn").onclick=()=>toast("Recordatorios de cobranza preparados");
+$("#dispatchBtn").onclick=()=>{bars("#bars-warehouse",[["Lima Principal",98,"98.1%"],["Callao",95,"94.6%"],["Ate",92,"91.8%"],["Surco",90,"90.1%"],["Norte",88,"88.4%"]],100);toast("Despachos optimizados: rendimiento actualizado")};
+$("#ackOps").onclick=()=>{$("#opsAlerts").style.opacity=.45;toast("Lectura de alertas confirmada")};
+$("#newInvoiceBtn").onclick=()=>toast("Factura demo creada: FAC-15873");
+
+$$(".periodSelect").forEach(sel=>sel.addEventListener("change",e=>{
+  const d=+e.target.value; const factor=d===7?.78:d===90?1.18:1;
+  const vals=[18,25,34,29,45,53,48,62,71,68,89,96].map(v=>Math.round(v*factor));chart("#chart-resumen",vals,["1","3","5","7","9","11","13","15","17","19","21","23"]);toast("Periodo actualizado");
+}));
+
+function exportCSV(){
+  const active=$(".view.active"); const tbl=active.querySelector("table");
+  if(!tbl){toast("No hay tabla visible para exportar");return}
+  const rows=[...tbl.querySelectorAll("tr")].filter(r=>getComputedStyle(r).display!=="none").map(r=>[...r.children].map(c=>`"${c.innerText.replace(/"/g,'""')}"`).join(","));
+  const blob=new Blob([rows.join("\n")],{type:"text/csv;charset=utf-8;"});
+  const a=document.createElement("a");const url=URL.createObjectURL(blob);a.href=url;a.download="demo_bce_export.csv";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);toast("CSV exportado");
+}
+$("#exportBtn").onclick=exportCSV;
+
+function wireMap(mapId, tipId){
+  const map=$(mapId), tip=$(tipId);
+  map.querySelectorAll(".pin").forEach(p=>{
+    const showTip=()=>{tip.textContent=p.dataset.tip;tip.style.display="block";tip.style.left=Math.max(0,Math.min(p.offsetLeft+18,map.clientWidth-tip.offsetWidth))+"px";tip.style.top=Math.max(0,p.offsetTop-6)+"px"};
+    p.addEventListener("mouseenter",showTip);
+    p.addEventListener("click",showTip);
+    p.addEventListener("mouseleave",()=>tip.style.display="none");
+  });
+}
+wireMap("#map-carga","#routeTip");wireMap("#map-track","#routeTip2");
+$("#routeFilter").onchange=e=>{
+  const val=e.target.value; $$(".track-pin").forEach(p=>p.style.display=(val==="all"||p.dataset.status===val)?"block":"none");
+  toast("Filtro de rutas aplicado");
+};
+
+renderAll();
+</script>
+</body>
 </html>
